@@ -173,6 +173,20 @@ def predect_and_plotImages(model: nn.Module,
                            class_names:list, 
                            seed:int=None
                            ):
+  """
+  This Functoin helps to predict certain amount of predections and compare them with the labels.
+  The comparing will be by showing tge label and the predections as a title to the image input.
+  The input being choosed randomly or depending on the seed.
+  Lastly the maximum number of predections/images is 5.
+
+  Hyperparameters:
+  model: The model that will do the predictions
+  dataloader: The dataloader of the data will be used in the function (must be in  type torch.utils.data.DataLoader)
+  n_predections: The number of predections wanted to be shown, maximum 5
+  class_namse: All class names of the predections
+  seed: The random seed of the randomness function
+  """
+
   row, col = 1  , 5 if n_predections > 5 else n_predections
   if seed:
     random.seed(seed)
@@ -193,3 +207,11 @@ def predect_and_plotImages(model: nn.Module,
       plt.title(f'Pred: {class_names[label_pred]} | Label: {class_names[label]}', c='red')
     plt.axis(False)
   plt.show()
+
+def set_seed(seed:int=None):
+  """
+  Sets the manule seeds to each cpu and cuda in torch
+  """
+  if seed:  
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
