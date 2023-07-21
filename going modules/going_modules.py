@@ -64,7 +64,7 @@ def create_ImgDataloader(train_dir:str,
   test_batch_size: if True it won't apply a batch to the test data
   """
 
-  test_batch_size = test_batch_size if not test_batch_size else batch_size
+  test_batch_size = test_batch_size if test_batch_size != None else batch_size
 
   train_data = torchvision.datasets.ImageFolder(train_dir, transform=train_transform)
   test_data = torchvision.datasets.ImageFolder(test_dir, transform=test_transform)
@@ -165,7 +165,7 @@ def train_model(model:nn.Module,
     summary['train_acc'].append(train_acc)
     summary['test_acc'].append(test_acc)
   print('Done')
-  
+
   return summary
 
 def save_model(model:nn.Module, name:str, diractory:str = None):
@@ -215,7 +215,7 @@ def predect_and_plotImages(model: nn.Module,
   """
 
   row, col = 1  , 5 if n_predections > 5 else n_predections
-  if seed:
+  if seed != None:
     random.seed(seed)
 
   if n_predections>5:
@@ -239,6 +239,6 @@ def set_seed(seed:int=None):
   """
   Sets the manule seeds to each cpu and cuda in torch
   """
-  if seed:  
+  if seed != None:  
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
