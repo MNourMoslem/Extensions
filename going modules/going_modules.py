@@ -231,6 +231,5 @@ def set_seed(seed:int=None):
   """
   Sets the manule seeds to each cpu and cuda in torch
   """
-  if seed != None:  
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
+  torch.manual_seed(seed)
+  torch.cuda.manual_seed(seed)
