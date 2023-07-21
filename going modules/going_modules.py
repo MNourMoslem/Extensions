@@ -149,24 +149,22 @@ def train_model(model:nn.Module,
     print(f'Test Loss: {test_loss:.5f} | Test Accuracy: {acc:.2f}%')
     return test_loss, acc
 
-  summary = {
-    'train_loss':[],
-    'test_loss':[],
-    'train_acc':[],
-    'test_acc':[]
-  }
+  train_loss_list = []
+  test_loss_list = []
+  train_acc_list = []
+  test_acc_list = []
 
   for i in range(epochs):
     print(f'\nEpoch {i+1}:\n------------------------------')
     train_loss, train_acc = train_step(train_dataloader, model, optimizer, loss_fn, train_epochs)
     test_loss, test_acc = test_step(test_dataloader, model, loss_fn)
-    summary['train_loss'].append(train_loss)
-    summary['test_loss'].append(test_loss)
-    summary['train_acc'].append(train_acc)
-    summary['test_acc'].append(test_acc)
+    train_loss_list.append(train_loss)
+    test_loss_list.append(test_loss)
+    train_acc_list.append(train_acc)
+    test_acc_list.append(test_acc)
   print('Done')
 
-  return summary
+  return train_loss_list, test_loss_list, train_acc_list, test_acc_list
 
 def save_model(model:nn.Module, name:str, diractory:str = None):
   """
