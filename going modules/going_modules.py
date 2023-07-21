@@ -83,8 +83,18 @@ def train_model(model:nn.Module,
                 train_epochs:int=1,
                 device:torch.device='cpu'):
   """
-  This Function train your data and then test it module according to the hyperparameters bellow:
+  This Function train your data and then test it module according to the hyperparameters bellow.
+  Train Function will also return a dictionary of :
+  {
+  'train_loss':[...],
+  'test_loss':[...],
+  'train_acc':[...],
+  'test_acc':[...],
+  }
 
+  train/test losses will be the avg. of the losses / number of batch size
+
+  Hyperparameter:
   model: The model is wanted to be trained
   train_dataloader: The dataloader of the train data, it has to by of the type of torch.uilts.data.DataLoader
   test_dataloader: The dataloader of the test data, it has to by of the type of torch.uilts.data.DataLoader
@@ -114,9 +124,11 @@ def train_model(model:nn.Module,
         if i+1 == epochs:
           correct += torch.eq(y_logits.argmax(1), y).float().sum().item()
           train_loss += loss.item()
+    acc = correct/len(dataloader.dataset)*100
     train_loss /= len(dataloader)
 
-    print(f'Train Loss: {train_loss:.7f} | Train Accuracy: {(correct/len(dataloader.dataset)*100):.2f}%')
+    print(f'Train Loss: {train_loss:.7f} | Train Accuracy: {acc:.2f}%')
+    return train_loss, acc
 
   def test_step(dataloader, model, loss_fn, device=device):
     model.eval()
@@ -131,15 +143,30 @@ def train_model(model:nn.Module,
         correct += torch.eq(y_logits.argmax(1), y).float().sum().item()
         test_loss += loss.item()
 
+    acc = correct/len(dataloader.dataset)*100
     test_loss /= len(dataloader)
 
-    print(f'Test Loss: {test_loss:.5f} | Test Accuracy: {(correct/len(dataloader.dataset)*100):.2f}%')
+    print(f'Test Loss: {test_loss:.5f} | Test Accuracy: {acc:.2f}%')
+    return test_loss, acc
+
+  summary = {
+    'train_loss':[],
+    'test_loss':[],
+    'train_acc':[],
+    'test_acc':[]
+  }
 
   for i in range(epochs):
     print(f'\nEpoch {i+1}:\n------------------------------')
-    train_step(train_dataloader, model, optimizer, loss_fn, train_epochs)
-    test_step(test_dataloader, model, loss_fn)
+    train_loss, train_acc = train_step(train_dataloader, model, optimizer, loss_fn, train_epochs)
+    test_loss, test_acc = test_step(test_dataloader, model, loss_fn)
+    summary['train_loss'].append(train_loss)
+    summary['test_loss'].append(test_loss)
+    summary['train_acc'].append(train_acc)
+    summary['test_acc'].append(test_acc)
   print('Done')
+  
+  return summary
 
 def save_model(model:nn.Module, name:str, diractory:str = None):
   """
