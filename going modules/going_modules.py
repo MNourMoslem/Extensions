@@ -84,13 +84,7 @@ def train_model(model:nn.Module,
                 device:torch.device='cpu'):
   """
   This Function train your data and then test it module according to the hyperparameters bellow.
-  Train Function will also return a dictionary of :
-  {
-  'train_loss':[...],
-  'test_loss':[...],
-  'train_acc':[...],
-  'test_acc':[...],
-  }
+  Train Function will also returns -> Tuple[train_loss, test_loss, train_accuracy, test_accuracy]
 
   train/test losses will be the avg. of the losses / number of batch size
 
