@@ -46,7 +46,9 @@ def create_ImgDataloader(train_dir:str,
                         train_transform: torchvision.transforms,
                         test_transform: torchvision.transforms,
                         batch_size:int,
-                        test_batch_size:int=None):
+                        test_batch_size:int=None,
+                        shuffle_train:bool=True,
+                        shuffle_test:bool=False):
   """
   This function takes the train/test diractories and convert them into
   torchvisoin.datasets.ImageFolder --> torch.utils.data.Dataloader and will
@@ -69,8 +71,8 @@ def create_ImgDataloader(train_dir:str,
   train_data = torchvision.datasets.ImageFolder(train_dir, transform=train_transform)
   test_data = torchvision.datasets.ImageFolder(test_dir, transform=test_transform)
 
-  train_dataloader = torch.utils.data.DataLoader(train_data, batch_size=batch_size)
-  test_dataloader = torch.utils.data.DataLoader(test_data, batch_size=test_batch_size)
+  train_dataloader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=shuffle_train)
+  test_dataloader = torch.utils.data.DataLoader(test_data, batch_size=test_batch_size, shuffle=shuffle_test)
 
   return train_dataloader, test_dataloader, train_data.classes
 
